@@ -1,4 +1,4 @@
-<a href="https://qrGPT.io">
+<!-- <a href="https://qrGPT.io">
   <img alt="QrGPT – Generate beautiful AI QR Codes in seconds." src="/public/og-image.png">
   <h1 align="center">qrGPT</h1>
 </a>
@@ -50,4 +50,4 @@ Note that you'll need to:
 
 - [Codeium](https://codeium.com?repo_name=nutlope%2Fqrgpt) and [v0](https://v0.dev/) for quick prototyping and AI autocomplete
 - [Spirals](https://spirals.vercel.app/) for great code patterns and some code (ty Steven)
-- [Lim Zi Yang](https://github.com/ZYLIM0702) for the original AI model
+- [Lim Zi Yang](https://github.com/ZYLIM0702) for the original AI model -->
