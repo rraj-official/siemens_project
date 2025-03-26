@@ -3,12 +3,14 @@ import Replicate from 'replicate';
 import { QrCodeControlNetRequest, QrCodeControlNetResponse } from './types';
 
 export class ReplicateClient {
-  replicate: Replicate;
+  replicate: Replicate | null = null;
 
-  constructor(apiKey: string) {
-    this.replicate = new Replicate({
-      auth: apiKey,
-    });
+  constructor(apiKey: string | null) {
+    if (apiKey) {
+      this.replicate = new Replicate({
+        auth: apiKey,
+      });
+    }
   }
 
   /**
@@ -17,6 +19,11 @@ export class ReplicateClient {
   generateQrCode = async (
     request: QrCodeControlNetRequest,
   ): Promise<string> => {
+    if (!this.replicate) {
+      // Return a mock URL if no API key is available
+      return "https://placeholder.com/qr-placeholder.png";
+    }
+    
     const output = (await this.replicate.run(
       'zylim0702/qr_code_controlnet:628e604e13cf63d8ec58bd4d238474e8986b054bc5e1326e50995fdbc851c557',
       {
@@ -40,7 +47,4 @@ export class ReplicateClient {
 }
 
 const apiKey = getEnv(ENV_KEY.REPLICATE_API_KEY);
-if (!apiKey) {
-  throw new Error('REPLICATE_API_KEY is not set');
-}
 export const replicateClient = new ReplicateClient(apiKey);
