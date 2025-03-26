@@ -7,8 +7,8 @@ import {
   Form,
 } from '@/components/ui/form';
 import { Button } from '@/components/ui/button';
-import { useState, useEffect } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { AlertCircle, Upload } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import { FormDropdown } from './ui/form-dropdown';
@@ -36,6 +36,8 @@ const Body = () => {
   const [displayRotor, setDisplayRotor] = useState<string | null>(null);
   const [rotorData, setRotorData] = useState<RotorData | null>(null);
   const [showResults, setShowResults] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch rotor mapping data on component mount
   useEffect(() => {
@@ -122,8 +124,32 @@ const Body = () => {
     }
   };
 
+  // Handle file change
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setUploadedFile(e.target.files[0]);
+    }
+  };
+
   // Handle analyze button click
   const handleAnalyze = () => {
+    if (showResults) {
+      // Reset functionality
+      setShowResults(false);
+      setDisplayRotor(null);
+      setRotorData(null);
+      setUploadedFile(null);
+      form.reset({
+        rotorReferenceNumber: '',
+        setSize: '',
+        closestRotor: '',
+      });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+      return;
+    }
+
     if (selectedClosestRotor) {
       fetchRotorData(selectedClosestRotor);
     } else {
@@ -139,6 +165,38 @@ const Body = () => {
           <Form {...form}>
             <form onSubmit={(e) => e.preventDefault()}>
               <div className="flex flex-col gap-4">
+                <div 
+                  className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                    showResults ? 'max-h-0 opacity-0' : 'max-h-40 opacity-100'
+                  }`}
+                >
+                  <div className="mb-4">
+                    <p className="text-sm font-medium mb-1">Upload Reference Run File</p>
+                    <div className="flex items-center gap-2">
+                      <div className="flex-1 relative">
+                        <input
+                          type="file"
+                          accept=".csv"
+                          ref={fileInputRef}
+                          onChange={handleFileChange}
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                        />
+                        <div className="w-full h-10 flex items-center px-3 rounded-md border border-gray-300 bg-white text-sm">
+                          {uploadedFile ? uploadedFile.name : 'No file selected'}
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="h-10 px-4 flex items-center gap-2"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <Upload className="h-4 w-4" />
+                        Browse
+                      </Button>
+                    </div>
+                  </div>
+                </div>
                 <FormDropdown
                   form={form}
                   name="rotorReferenceNumber"
@@ -177,6 +235,8 @@ const Body = () => {
                 >
                   {isLoading ? (
                     <LoadingDots color="white" />
+                  ) : showResults ? (
+                    'Reset'
                   ) : (
                     'Analyze'
                   )}
