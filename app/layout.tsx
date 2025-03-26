@@ -8,18 +8,18 @@ import PlausibleProvider from 'next-plausible';
 
 const inter = Inter({ subsets: ['latin'] });
 
-let title = 'QrGPT - QR Code Generator';
-let description = 'Generate your AI QR Code in seconds';
-let url = 'https://www.qrgpt.io';
-let ogimage = 'https://www.qrgpt.io/og-image.png';
-let sitename = 'qrGPT.io';
+let title = 'Siemens Rotor Analysis';
+let description = 'Use this tool to analyze rotor data.';
+let url = 'https://1000logos.net/wp-content/uploads/2021/11/Siemens-logo.png';
+let ogimage = 'https://1000logos.net/wp-content/uploads/2021/11/Siemens-logo.png';
+let sitename = 'Siemens Rotor Analysis';
 
 export const metadata: Metadata = {
   metadataBase: new URL(url),
   title,
   description,
   icons: {
-    icon: '/favicon.ico',
+    icon: '/siemens_logo.png',
   },
   openGraph: {
     images: [ogimage],
